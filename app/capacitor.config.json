@@ -1,0 +1,12 @@
+{
+  "appId": "com.aerodrop.app",
+  "appName": "AeroDrop",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#C8D0E6"
+    }
+  }
+}
