@@ -3,3 +3,9 @@
 build/
 .gradle/
 local.properties
+*.apk
+*.aab
+build/
+.gradle/
+local.properties
+.idea/
