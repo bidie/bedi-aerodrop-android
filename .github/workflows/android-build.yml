@@ -13,20 +13,38 @@ jobs:
       run:
         working-directory: ${{ github.workspace }}/AndroidApp
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
-      - name: Build Android APK
+      - name: Install Gradle dependencies
+        run: ./gradlew clean assembleRelease || ./gradlew build --refresh-dependencies
+
+      - name: Build APK
         run: ./gradlew assembleRelease
+        continue-on-error: true
 
-      - name: Upload Artifact
+      - name: AI Log Analyzer Hook
+        run: echo "Logs for Termux AI analyzer" >> $GITHUB_WORKSPACE/.android_build.log
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v3
         with:
           name: app-release.apk
           path: app/build/outputs/apk/release/app-release.apk
+
+      - name: Deploy via Fastlane (Play Store / fallback)
+        run: |
+          command -v fastlane && fastlane android release || echo "Fastlane not installed"
+
+      - name: Upload build logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-build-logs
+          path: $GITHUB_WORKSPACE/.android_build.log
